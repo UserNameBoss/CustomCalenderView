@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <declare-styleable name="CustomCalenderView">
+        <attr name="ccv_yearMonthTitleHeight" format="dimension"/>
+        <attr name="ccv_yearMonthBgColor" format="color"/>
+        <attr name="ccv_yearMonthTextColor" format="color"/>
+        <attr name="ccv_yearMonthTextSize" format="color"/>
+    </declare-styleable>
+</resources>
