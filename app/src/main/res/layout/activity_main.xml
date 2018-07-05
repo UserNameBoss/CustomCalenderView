@@ -6,9 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.example.lenovo.customcalender.MainActivity">
 
-    <com.example.lenovo.customcalender.CustomCalenderView
+
+    <com.example.lenovo.customcalender.CustomViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:ccv_yearMonthBgColor="@color/colorAccent"/>
+        app:ccv_yearMonthBgColor="#ff926CFF"
+        app:ccv_weekTextColor="#ff435FFF"
+        app:ccv_weekTextSize="40sp"
+        app:ccv_yearMonthTextColor="#ff4FFDFF"/>
+
+
+    <GridView
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="7"
+        android:id="@+id/gri_calender"></GridView>
 
 </android.support.constraint.ConstraintLayout>

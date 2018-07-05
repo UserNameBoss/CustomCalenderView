@@ -2,9 +2,23 @@
 <resources>
     
     <declare-styleable name="CustomCalenderView">
+
+        //绘制年月日标题的参数
         <attr name="ccv_yearMonthTitleHeight" format="dimension"/>
         <attr name="ccv_yearMonthBgColor" format="color"/>
         <attr name="ccv_yearMonthTextColor" format="color"/>
-        <attr name="ccv_yearMonthTextSize" format="color"/>
+        <attr name="ccv_yearMonthTextSize" format="dimension"/>
+
+        //绘制星期几的参数
+        <attr name="ccv_weekTextColor" format="color"/>
+        <attr name="ccv_weekTextSize" format="dimension"/>
+
+        //绘制日期的参数
+        <attr name="ccv_dayTextColor" format="color"/>
+        <attr name="ccv_dayTextSize" format="dimension"/>
+        <attr name="ccv_currentDayBgColor" format="color"/>
+
+        //最大要显示多少个月份
+        <attr name="ccv_maxMonthCount" format="integer"/>
     </declare-styleable>
 </resources>

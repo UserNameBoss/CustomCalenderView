@@ -1,5 +1,6 @@
 package com.example.lenovo.customcalender;
 
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,15 +46,19 @@ public class CustomCalenderAdapter extends BaseAdapter {
      */
     public void setYearAndMonth(int year, int month) {
         Calendar calendar = Calendar.getInstance();
+        //当前月的1号是周几 0:是星期天
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        firstweek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month - 1);//默认1月为0月
 
         //获取当前月份的天数
         selectMonthDayCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-        //当前月的1号是周几
-        firstweek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
         //获取当前月所占用的行数
-        lineNum = (selectMonthDayCount - (7 - firstweek + 1)) / 7 + ((selectMonthDayCount - (7 - firstweek + 1)) % 7 == 0 ? 0 : 1);
+        lineNum = (selectMonthDayCount - (7 - firstweek)) / 7 + ((selectMonthDayCount - (7 - firstweek)) % 7 == 0 ? 0 : 1)+1;
+        System.out.println("====selectMonthDayCount="+selectMonthDayCount+"===firstweek="+firstweek+"========lineNum="+lineNum);
         notifyDataSetChanged();
     }
 
@@ -77,6 +82,8 @@ public class CustomCalenderAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if(convertView==null) {
+            DisplayMetrics dm2 =parent.getResources().getDisplayMetrics();
+
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_custom_calender, parent, false);
             viewHolder=new ViewHolder(convertView);
             convertView.setTag(viewHolder);
@@ -84,9 +91,9 @@ public class CustomCalenderAdapter extends BaseAdapter {
             viewHolder= (ViewHolder) convertView.getTag();
         }
 
-        if(position>firstweek-1&&position<selectMonthDayCount+firstweek-1){
-            int content=position-firstweek+2;
-            viewHolder.tvDay.setText((content>10?content+"":"0"+content));
+        if(position>firstweek-1&&position<selectMonthDayCount+firstweek){
+            int content=position-firstweek+1;
+            viewHolder.tvDay.setText((content>=10?content+"":"0"+content));
         }else{
             viewHolder.tvDay.setText("");
         }
