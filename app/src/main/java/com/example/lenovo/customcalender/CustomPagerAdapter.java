@@ -47,7 +47,8 @@ public class CustomPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         if(ccvViews.get(position)==null){
-            CustomCalenderView customCalenderView=new CustomCalenderView(mContext,typedArray);
+            getYearAndMonth(position);
+            CustomCalenderView customCalenderView=new CustomCalenderView(selectYear,selectMonth,mContext,typedArray);
             ccvViews.put(position,customCalenderView);
         }
         container.addView(ccvViews.get(position));
@@ -69,20 +70,24 @@ public class CustomPagerAdapter extends PagerAdapter {
     }
 
 
+    //计算对应页面下的年月
     public void getYearAndMonth(int position){
         int current=maxMonthCount/2;
         int differMonth=Math.abs(position-current);
-        if(differMonth>12-current){
-            int differYear=(differMonth+current-12)/2+(differMonth+current-12)%2;
+        if(differMonth>12-currentMonth){
+            int differYear=(differMonth+currentMonth-12)/2+(differMonth+currentMonth-12)%2;
             if(position>current){
                 selectYear=currentYear+differYear;
 
             }else{
                 selectYear=currentYear-differYear;
-
             }
         }else{
-            selectMonth=currentMonth+differMonth;
+            if(position>current) {
+                selectMonth = currentMonth + differMonth;
+            }else{
+                selectMonth = currentMonth - differMonth;
+            }
             selectYear=currentYear;
         }
     }

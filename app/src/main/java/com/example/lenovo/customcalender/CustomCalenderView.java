@@ -110,6 +110,7 @@ public class CustomCalenderView extends View {
             selectMonth = currentMonth;
             selectYear = currentYear;
         }
+        System.out.println("========selectYear="+selectYear+"==selectMonth="+selectMonth);
         setYearAndMonth(selectYear,selectMonth);
         GridView gridView=new GridView(this.getContext());
         customCalenderAdapter=new CustomCalenderAdapter();
