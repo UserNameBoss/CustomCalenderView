@@ -89,14 +89,23 @@ public class CustomPagerAdapter extends PagerAdapter {
     public void getYearAndMonth(int position){
         int current=maxMonthCount/2;
         int differMonth=Math.abs(position-current);
-        if((position>current&&differMonth>12-currentMonth)||(position<current&&differMonth>currentMonth)){
-            int differYear=(differMonth+currentMonth-12)/2+(differMonth+currentMonth-12)%2;
+        System.out.println("============differMonth="+differMonth);
+        if((position>current&&differMonth>12-currentMonth)||(position<current&&differMonth>=currentMonth)){
+            int differYear=0;
+            if(differMonth+currentMonth-12>0) {
+                if(position>current){
+                    differYear = (differMonth + currentMonth - 12) / 12 + ((differMonth + currentMonth  - 12) % 12 == 0 ? 0 : 1);
+                }else {
+                    differYear = (differMonth + currentMonth-1 - 12) / 12 + ((differMonth + currentMonth - 1 - 12) % 12 == 0 ? 0 : 1);
+                }
+            }
             if(position>current){
                 selectYear=currentYear+differYear;
-                selectMonth=12-((differMonth-(differYear-1)*12)-currentMonth);
+                selectMonth=(differMonth-(differYear-1)*12)-(12-currentMonth);
+
             }else{
                 selectYear=currentYear-differYear;
-                selectMonth=(differMonth-(differYear-1)*12)-(12-currentMonth);
+                selectMonth=12-((differMonth-(differYear-1)*12)-currentMonth);
             }
         }else{
             if(position>current) {

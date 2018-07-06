@@ -150,7 +150,7 @@ public class CustomCalenderView extends View {
             for(int j=0;j<7;j++){
                 if(i==0){
                     if(j>=firstweek){
-                        if(selectMonth==currentMonth&&currentDay==dayCount){
+                        if(selectYear==currentYear&&selectMonth==currentMonth&&currentDay==dayCount){
                             //绘制今天日期的背景
                             canvas.drawCircle(j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1)-dayTextSize/2,dayTextSize+20,currentDayPaint);
                         }
@@ -159,7 +159,7 @@ public class CustomCalenderView extends View {
                         dayCount++;
                     }
                 }else{
-                    if(selectMonth==currentMonth&&currentDay==dayCount){
+                    if(selectYear==currentYear&&selectMonth==currentMonth&&currentDay==dayCount){
                         //绘制今天日期的背景
                         canvas.drawCircle(j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1)-dayTextSize/2,dayTextSize+20,currentDayPaint);
                     }
@@ -177,9 +177,16 @@ public class CustomCalenderView extends View {
     /**
      * 获取标题
      */
-    public String getTitle(int year,int month){
-        return year+"年"+(month>10?month:"0"+month)+"月";
+    public String getTitle(){
+        return selectYear+"年"+(selectMonth>=10?selectMonth:"0"+selectMonth)+"月";
     }
 
 
+    public int getSelectMonth() {
+        return selectMonth;
+    }
+
+    public int getSelectYear() {
+        return selectYear;
+    }
 }

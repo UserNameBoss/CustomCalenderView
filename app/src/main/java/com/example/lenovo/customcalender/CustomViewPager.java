@@ -24,6 +24,8 @@ public class CustomViewPager extends ViewPager {
     public interface ChangeMonthLinsenter{
         void setYearAndMonth(int year,int month);
     }
+
+
     public CustomViewPager(@NonNull Context context) {
         super(context);
     }
@@ -68,7 +70,7 @@ public class CustomViewPager extends ViewPager {
                 if(changeMonthLinsenter!=null&&customCalenderView!=null){
 
 
-                    changeMonthLinsenter.setYearAndMonth(customPagerAdapter.getSelectYear(),customPagerAdapter.getSelectMonth());
+                    changeMonthLinsenter.setYearAndMonth(customCalenderView.getSelectYear(),customCalenderView.getSelectMonth());
                 }
             }
 
