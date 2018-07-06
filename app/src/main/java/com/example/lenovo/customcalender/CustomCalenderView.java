@@ -6,6 +6,8 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridView;
 
@@ -47,6 +49,7 @@ public class CustomCalenderView extends View {
     //绘制当前日期的背景
     private Paint currentDayPaint;
     private CustomCalenderAdapter customCalenderAdapter;
+    private GestureDetector gestureDetector;
 
     public CustomCalenderView(Context context) {
         super(context);
@@ -94,6 +97,19 @@ public class CustomCalenderView extends View {
         customCalenderAdapter=new CustomCalenderAdapter();
         gridView.setAdapter(customCalenderAdapter);
         setWillNotDraw(false);
+
+        gestureDetector=new GestureDetector(this.getContext(),new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                useClick(e.getX(),e.getY());
+                return true;
+            }
+        });
     }
     public void getAttrs(AttributeSet attrs){
         TypedArray typedArray =this.getContext().obtainStyledAttributes(attrs, R.styleable.CustomCalenderView);
@@ -173,6 +189,17 @@ public class CustomCalenderView extends View {
         }
     }
 
+
+    //处理点击
+    public void useClick(float x,float y){
+
+    }
+
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
 
     /**
      * 获取标题
