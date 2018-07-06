@@ -15,6 +15,15 @@ public class CustomViewPager extends ViewPager {
 
     private CustomPagerAdapter customPagerAdapter;
     private TypedArray typedArray;
+    private ChangeMonthLinsenter changeMonthLinsenter;
+
+    public void setChangeMonthLinsenter(ChangeMonthLinsenter changeMonthLinsenter) {
+        this.changeMonthLinsenter = changeMonthLinsenter;
+    }
+
+    public interface ChangeMonthLinsenter{
+        void setYearAndMonth(int year,int month);
+    }
     public CustomViewPager(@NonNull Context context) {
         super(context);
     }
@@ -25,8 +34,19 @@ public class CustomViewPager extends ViewPager {
         initView();
     }
 
+
+    public CustomViewPager(@NonNull Context context,TypedArray typedArray) {
+        super(context);
+        initTypedArray(typedArray);
+        initView();
+    }
+
     public void initTypedArray(AttributeSet attributeSet){
         typedArray=this.getContext().obtainStyledAttributes(attributeSet, R.styleable.CustomCalenderView);
+    }
+
+    public void initTypedArray(TypedArray typedArray){
+        this.typedArray=typedArray;
     }
 
 
@@ -35,5 +55,27 @@ public class CustomViewPager extends ViewPager {
         customPagerAdapter=new CustomPagerAdapter(this,typedArray,this.getContext());
         setAdapter(customPagerAdapter);
         setCurrentItem(customPagerAdapter.getMonthCount() / 2, false);
+
+        this.setOnPageChangeListener(new OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                CustomCalenderView customCalenderView=customPagerAdapter.getCcvViews().get(position);
+                if(changeMonthLinsenter!=null&&customCalenderView!=null){
+
+
+                    changeMonthLinsenter.setYearAndMonth(customPagerAdapter.getSelectYear(),customPagerAdapter.getSelectMonth());
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }

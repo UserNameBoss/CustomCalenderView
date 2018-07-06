@@ -26,6 +26,14 @@ public class CustomPagerAdapter extends PagerAdapter {
     private int currentYear;
     private int currentMonth;
 
+    public int getSelectYear() {
+        return selectYear;
+    }
+
+    public int getSelectMonth() {
+        return selectMonth;
+    }
+
     public CustomPagerAdapter(CustomViewPager customViewPager, TypedArray typedArray, Context mContext) {
         this.customViewPager=customViewPager;
         this.typedArray = typedArray;
@@ -55,6 +63,11 @@ public class CustomPagerAdapter extends PagerAdapter {
         return ccvViews.get(position);
     }
 
+
+    public SparseArray<CustomCalenderView> getCcvViews() {
+        return ccvViews;
+    }
+
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
@@ -70,17 +83,20 @@ public class CustomPagerAdapter extends PagerAdapter {
     }
 
 
-    //计算对应页面下的年月
+    /**
+     * 计算对应页面下的年月
+     */
     public void getYearAndMonth(int position){
         int current=maxMonthCount/2;
         int differMonth=Math.abs(position-current);
-        if(differMonth>12-currentMonth){
+        if((position>current&&differMonth>12-currentMonth)||(position<current&&differMonth>currentMonth)){
             int differYear=(differMonth+currentMonth-12)/2+(differMonth+currentMonth-12)%2;
             if(position>current){
                 selectYear=currentYear+differYear;
-
+                selectMonth=12-((differMonth-(differYear-1)*12)-currentMonth);
             }else{
                 selectYear=currentYear-differYear;
+                selectMonth=(differMonth-(differYear-1)*12)-(12-currentMonth);
             }
         }else{
             if(position>current) {

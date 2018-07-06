@@ -6,14 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.lenovo.customcalender.MainActivity">
 
-
-    <com.example.lenovo.customcalender.CustomViewPager
+    <com.example.lenovo.customcalender.CustomUseCalenderView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         app:ccv_yearMonthBgColor="#ff926CFF"
         app:ccv_weekTextColor="#ff435FFF"
         app:ccv_weekTextSize="40sp"
-        app:ccv_yearMonthTextColor="#ff4FFDFF"/>
+        app:ccv_yearMonthTextColor="#ff4FFDFF"
+        app:ccv_currentDayBgColor="#FF2EF0">
+    </com.example.lenovo.customcalender.CustomUseCalenderView>
+
 
 
     <GridView
