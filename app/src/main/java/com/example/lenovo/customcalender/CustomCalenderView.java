@@ -26,6 +26,8 @@ public class CustomCalenderView extends View {
     private int selectMonthDayCount=30;
     //所选择的月份1号是周几
     private int firstweek=1;
+    //所选择的月份最后一天是周几
+    private int lastWeek=0;
     //所选择的月份要显示几行
     private int lineNum=5;
     //当前年份和当前月份
@@ -43,6 +45,9 @@ public class CustomCalenderView extends View {
     //当前日期的背景颜色
     private int currentDayBgColor=0;
 
+    //绘制点击的图标的直径
+    private float cirRadius=60f;
+
     //画笔相关
     //绘制日期
     private Paint dayPaint;
@@ -50,6 +55,12 @@ public class CustomCalenderView extends View {
     private Paint currentDayPaint;
     private CustomCalenderAdapter customCalenderAdapter;
     private GestureDetector gestureDetector;
+    private int clickRow=-1,clickColumn=-1;
+    private OnClickEventListener onClickEventListener;
+
+    public void setOnClickEventListener(OnClickEventListener onClickEventListener) {
+        this.onClickEventListener = onClickEventListener;
+    }
 
     public CustomCalenderView(Context context) {
         super(context);
@@ -135,9 +146,12 @@ public class CustomCalenderView extends View {
         //当前月的1号是周几
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         firstweek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
         //获取当前月份的天数
         selectMonthDayCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-
+        //最后一天是周几
+        calendar.set(Calendar.DAY_OF_MONTH, selectMonthDayCount);
+        lastWeek=calendar.get(Calendar.DAY_OF_WEEK) - 1;
         //获取当前月所占用的行数
         lineNum=(selectMonthDayCount-(7-firstweek))/7+((selectMonthDayCount-(7-firstweek))%7==0?0:1)+1;
 
@@ -168,7 +182,12 @@ public class CustomCalenderView extends View {
                     if(j>=firstweek){
                         if(selectYear==currentYear&&selectMonth==currentMonth&&currentDay==dayCount){
                             //绘制今天日期的背景
-                            canvas.drawCircle(j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1)-dayTextSize/2,dayTextSize+20,currentDayPaint);
+                            //canvas.drawCircle(j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1)-dayTextSize/2,dayTextSize+20,currentDayPaint);
+                            if(clickColumn==-1) {
+                                clickColumn = j;
+                                clickRow = i;
+                            }
+
                         }
                         canvas.drawText(dayCount+"",j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1),dayPaint);
 
@@ -176,22 +195,82 @@ public class CustomCalenderView extends View {
                     }
                 }else{
                     if(selectYear==currentYear&&selectMonth==currentMonth&&currentDay==dayCount){
+                        if(clickColumn==-1) {
+                            clickColumn = i;
+                            clickRow = j;
+                        }
+
                         //绘制今天日期的背景
-                        canvas.drawCircle(j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1)-dayTextSize/2,dayTextSize+20,currentDayPaint);
+                        //canvas.drawCircle(j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1)-dayTextSize/2,dayTextSize+20,currentDayPaint);
                     }
                     canvas.drawText(dayCount+"",j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1),dayPaint);
                     dayCount++;
                 }
                 if(dayCount>selectMonthDayCount){
-                    return;
+                    break;
                 }
             }
+
+            if(dayCount>selectMonthDayCount){
+                break;
+            }
+        }
+        System.out.println("========clickColumn="+clickColumn+"===clickRow="+clickRow);
+        if(clickColumn!=-1) {
+            canvas.drawCircle(clickColumn * weekOneWidth + weekOneWidth / 2, (dayRowSize + dayTextSize) * (clickRow + 1) - dayTextSize / 2, cirRadius, currentDayPaint);
+            canvas.drawText(dayCount+"",clickColumn*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(clickRow+1),dayPaint);
+
         }
     }
 
 
     //处理点击
     public void useClick(float x,float y){
+        System.out.println("========x="+x+"====y="+y);
+        int column=(int)x/(getWidth()/7);
+        int row= (int) (y/(dayRowSize+dayTextSize));
+        if((row==clickRow&&column==clickColumn)||(row>=0&&row<lineNum)){
+            return;
+        }
+        System.out.println("=====column="+column+"===row="+row);
+        //计算要重新绘制的部分
+        int l= (int) (((getWidth()/7*column+getWidth()/7*(column+1))/2-cirRadius)-1);
+        int r=(int) (((getWidth()/7*column+getWidth()/7*(column+1))/2+cirRadius)+1);
+        int t= (int) (((dayRowSize+dayTextSize)*row+(dayRowSize+dayTextSize)*(row+1))/2-cirRadius-1);
+        int b=(int) (((dayRowSize+dayTextSize)*row+(dayRowSize+dayTextSize)*(row+2))/2+cirRadius+1);
+        //之前的部分要清除
+        int oldl = (int) (((getWidth() / 7 * clickColumn + getWidth() / 7 * (clickColumn + 1)) / 2 - cirRadius ) - 1);
+        int oldr = (int) (((getWidth() / 7 * clickColumn + getWidth() / 7 * (clickColumn + 1)) / 2 + cirRadius) + 1);
+        int oldt = (int) (((dayRowSize + dayTextSize) * clickRow + (dayRowSize + dayTextSize) * (clickRow + 1)) / 2 - cirRadius - 1);
+        int oldb = (int) (((dayRowSize + dayTextSize) * clickRow + (dayRowSize + dayTextSize) * (clickRow + 2)) / 2 + cirRadius + 1);
+
+        if(row>=0&&row<lineNum) {
+            if (row == 0) {
+                if (column >= firstweek) {
+                    clickRow = row;
+                    clickColumn = column;
+                    invalidate(oldl,oldt,oldr,oldb);
+                    invalidate(l, t, r, b);
+//                    if(onClickEventListener!=null){
+//
+//                    }
+                }
+            } else {
+                if (row == lineNum - 1) {
+                    if (column <= lastWeek) {
+                        clickRow = row;
+                        clickColumn = column;
+                        invalidate(oldl,oldt,oldr,oldb);
+                        invalidate(l, t, r, b);
+                    }
+                } else {
+                    clickRow = row;
+                    clickColumn = column;
+                    invalidate(oldl,oldt,oldr,oldb);
+                    invalidate(l, t, r, b);
+                }
+            }
+        }
 
     }
 

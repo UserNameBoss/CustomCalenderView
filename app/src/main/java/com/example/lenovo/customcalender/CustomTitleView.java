@@ -168,7 +168,7 @@ public class CustomTitleView extends View {
     public void setYearAndMonth(int selectYear,int selectMonth){
         this.selectMonth = selectMonth;
         this.selectYear = selectYear;
-        invalidate();
+        invalidate(0,0,getWidth(), (int) yearMonthTitleHeight);
     }
 
     /**

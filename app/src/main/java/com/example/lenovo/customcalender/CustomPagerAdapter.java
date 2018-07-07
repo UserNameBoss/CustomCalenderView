@@ -25,6 +25,7 @@ public class CustomPagerAdapter extends PagerAdapter {
     private int selectYear,selectMonth;
     private int currentYear;
     private int currentMonth;
+    private OnClickEventListener onClickEventListener;
 
     public int getSelectYear() {
         return selectYear;
@@ -34,13 +35,13 @@ public class CustomPagerAdapter extends PagerAdapter {
         return selectMonth;
     }
 
-    public CustomPagerAdapter(CustomViewPager customViewPager, TypedArray typedArray, Context mContext) {
+    public CustomPagerAdapter(CustomViewPager customViewPager, TypedArray typedArray, Context mContext,OnClickEventListener onClickEventListener) {
         this.customViewPager=customViewPager;
         this.typedArray = typedArray;
         maxMonthCount=typedArray.getInt(R.styleable.CustomCalenderView_ccv_maxMonthCount,40);
         this.ccvViews =new SparseArray<>();
         this.mContext = mContext;
-
+        this.onClickEventListener=onClickEventListener;
         Calendar calendar=Calendar.getInstance();
         currentYear=calendar.get(Calendar.YEAR);
         currentMonth=calendar.get(Calendar.MONTH)+1;
@@ -57,6 +58,7 @@ public class CustomPagerAdapter extends PagerAdapter {
         if(ccvViews.get(position)==null){
             getYearAndMonth(position);
             CustomCalenderView customCalenderView=new CustomCalenderView(selectYear,selectMonth,mContext,typedArray);
+            customCalenderView.setOnClickEventListener(onClickEventListener);
             ccvViews.put(position,customCalenderView);
         }
         container.addView(ccvViews.get(position));
