@@ -38,7 +38,7 @@ public class CustomPagerAdapter extends PagerAdapter {
     public CustomPagerAdapter(CustomViewPager customViewPager, TypedArray typedArray, Context mContext,OnClickEventListener onClickEventListener) {
         this.customViewPager=customViewPager;
         this.typedArray = typedArray;
-        maxMonthCount=typedArray.getInt(R.styleable.CustomCalenderView_ccv_maxMonthCount,40);
+        maxMonthCount=typedArray.getInt(R.styleable.CustomCalenderView_ccv_maxMonthCount,200);
         this.ccvViews =new SparseArray<>();
         this.mContext = mContext;
         this.onClickEventListener=onClickEventListener;
@@ -91,7 +91,6 @@ public class CustomPagerAdapter extends PagerAdapter {
     public void getYearAndMonth(int position){
         int current=maxMonthCount/2;
         int differMonth=Math.abs(position-current);
-        System.out.println("============differMonth="+differMonth);
         if((position>current&&differMonth>12-currentMonth)||(position<current&&differMonth>=currentMonth)){
             int differYear=0;
             if(differMonth+currentMonth-12>0) {

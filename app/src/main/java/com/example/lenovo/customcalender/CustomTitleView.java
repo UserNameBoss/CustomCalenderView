@@ -94,6 +94,8 @@ public class CustomTitleView extends View {
         Calendar calendar=Calendar.getInstance();
         selectYear=calendar.get(Calendar.YEAR);
         selectMonth=calendar.get(Calendar.MONTH)+1;
+        SaveDateInfoUtils.clickYear=selectYear;
+        SaveDateInfoUtils.clickMonth=selectMonth;
     }
 
     @Override

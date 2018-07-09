@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.SurfaceView;
 import android.widget.GridView;
 
 import java.util.Calendar;
@@ -17,7 +17,7 @@ import java.util.Calendar;
  * Created by lenovo on 2018/6/29 029.
  */
 
-public class CustomCalenderView extends View {
+public class CustomCalenderView extends SurfaceView {
 
     //所选择的月份和年份
     private int selectMonth=-1;
@@ -94,6 +94,15 @@ public class CustomCalenderView extends View {
 
     public void initView(){
 
+        dayPaint=new Paint();
+        currentDayPaint=new Paint();
+        dayPaint.setTextSize(dayTextSize);
+        dayPaint.setColor(dayTextColor);
+        currentDayPaint.setColor(currentDayBgColor);
+        dayPaint.setTextAlign(Paint.Align.CENTER);
+
+        this.setBackgroundResource(R.color.white);
+
         Calendar calendar=Calendar.getInstance();
         currentYear=calendar.get(Calendar.YEAR);
         currentMonth=calendar.get(Calendar.MONTH)+1;
@@ -160,13 +169,6 @@ public class CustomCalenderView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
-
-        dayPaint=new Paint();
-        currentDayPaint=new Paint();
-        dayPaint.setTextSize(dayTextSize);
-        dayPaint.setColor(dayTextColor);
-        currentDayPaint.setColor(currentDayBgColor);
-        dayPaint.setTextAlign(Paint.Align.CENTER);
         drawDay(canvas);
     }
 
@@ -215,24 +217,26 @@ public class CustomCalenderView extends View {
                 break;
             }
         }
-        System.out.println("========clickColumn="+clickColumn+"===clickRow="+clickRow);
-        if(clickColumn!=-1) {
+        if(clickColumn!=-1&&SaveDateInfoUtils.clickYear==selectYear&&SaveDateInfoUtils.clickMonth==selectMonth) {
             canvas.drawCircle(clickColumn * weekOneWidth + weekOneWidth / 2, (dayRowSize + dayTextSize) * (clickRow + 1) - dayTextSize / 2, cirRadius, currentDayPaint);
-            canvas.drawText(dayCount+"",clickColumn*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(clickRow+1),dayPaint);
+            canvas.drawText(""+getDaty(clickRow,clickColumn),clickColumn*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(clickRow+1),dayPaint);
 
         }
+    }
+
+    //根据行列得到日期
+    public int getDaty(int row,int column){
+        return ((7-firstweek)+(row-1)*7+column+1);
     }
 
 
     //处理点击
     public void useClick(float x,float y){
-        System.out.println("========x="+x+"====y="+y);
         int column=(int)x/(getWidth()/7);
         int row= (int) (y/(dayRowSize+dayTextSize));
-        if((row==clickRow&&column==clickColumn)||(row>=0&&row<lineNum)){
+        if((row==clickRow&&column==clickColumn)||(row>lineNum)){
             return;
         }
-        System.out.println("=====column="+column+"===row="+row);
         //计算要重新绘制的部分
         int l= (int) (((getWidth()/7*column+getWidth()/7*(column+1))/2-cirRadius)-1);
         int r=(int) (((getWidth()/7*column+getWidth()/7*(column+1))/2+cirRadius)+1);
@@ -249,25 +253,40 @@ public class CustomCalenderView extends View {
                 if (column >= firstweek) {
                     clickRow = row;
                     clickColumn = column;
+                    SaveDateInfoUtils.clickYear=selectYear;
+                    SaveDateInfoUtils.clickMonth=selectMonth;
+                    SaveDateInfoUtils.clickDay=getDaty(clickRow,clickColumn);
                     invalidate(oldl,oldt,oldr,oldb);
                     invalidate(l, t, r, b);
-//                    if(onClickEventListener!=null){
-//
-//                    }
+                    if(onClickEventListener!=null){
+                        onClickEventListener.setYearMonthDay(selectYear,selectMonth,SaveDateInfoUtils.clickDay);
+                    }
                 }
             } else {
                 if (row == lineNum - 1) {
                     if (column <= lastWeek) {
                         clickRow = row;
                         clickColumn = column;
+                        SaveDateInfoUtils.clickYear=selectYear;
+                        SaveDateInfoUtils.clickMonth=selectMonth;
+                        SaveDateInfoUtils.clickDay=getDaty(clickRow,clickColumn);
                         invalidate(oldl,oldt,oldr,oldb);
                         invalidate(l, t, r, b);
+                        if(onClickEventListener!=null){
+                            onClickEventListener.setYearMonthDay(selectYear,selectMonth,SaveDateInfoUtils.clickDay);
+                        }
                     }
                 } else {
                     clickRow = row;
                     clickColumn = column;
+                    SaveDateInfoUtils.clickYear=selectYear;
+                    SaveDateInfoUtils.clickMonth=selectMonth;
+                    SaveDateInfoUtils.clickDay=getDaty(clickRow,clickColumn);
                     invalidate(oldl,oldt,oldr,oldb);
                     invalidate(l, t, r, b);
+                    if(onClickEventListener!=null){
+                        onClickEventListener.setYearMonthDay(selectYear,selectMonth,SaveDateInfoUtils.clickDay);
+                    }
                 }
             }
         }

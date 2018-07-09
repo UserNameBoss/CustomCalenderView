@@ -54,7 +54,12 @@ public class CustomViewPager extends ViewPager {
 
     public void initView(){
 
-        customPagerAdapter=new CustomPagerAdapter(this,typedArray,this.getContext());
+        customPagerAdapter=new CustomPagerAdapter(this, typedArray, this.getContext(), new OnClickEventListener() {
+            @Override
+            public void setYearMonthDay(int year, int month, int day) {
+                System.out.println("======year="+year+"==month="+month+"==day="+day);
+            }
+        });
         setAdapter(customPagerAdapter);
         setCurrentItem(customPagerAdapter.getMonthCount() / 2, false);
 
