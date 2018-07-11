@@ -14,6 +14,7 @@
         app:ccv_weekTextColor="#ff435FFF"
         app:ccv_weekTextSize="40sp"
         app:ccv_yearMonthTextColor="#ff4FFDFF"
+        app:ccv_selectdayTextColor="#ffffff"
         app:ccv_currentDayBgColor="#FF2EF0">
     </com.example.lenovo.customcalender.CustomUseCalenderView>
 

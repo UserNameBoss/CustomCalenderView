@@ -51,12 +51,14 @@ public class CustomCalenderView extends SurfaceView {
     //画笔相关
     //绘制日期
     private Paint dayPaint;
+    private Paint selectPaint;
     //绘制当前日期的背景
     private Paint currentDayPaint;
     private CustomCalenderAdapter customCalenderAdapter;
     private GestureDetector gestureDetector;
     private int clickRow=-1,clickColumn=-1;
     private OnClickEventListener onClickEventListener;
+    private int selectDayTestColor;
 
     public void setOnClickEventListener(OnClickEventListener onClickEventListener) {
         this.onClickEventListener = onClickEventListener;
@@ -98,9 +100,16 @@ public class CustomCalenderView extends SurfaceView {
         currentDayPaint=new Paint();
         dayPaint.setTextSize(dayTextSize);
         dayPaint.setColor(dayTextColor);
-        currentDayPaint.setColor(currentDayBgColor);
-        dayPaint.setTextAlign(Paint.Align.CENTER);
 
+        currentDayPaint.setColor(currentDayBgColor);
+        currentDayPaint.setTextSize(dayTextSize);
+        currentDayPaint.setTextAlign(Paint.Align.CENTER);
+
+        dayPaint.setTextAlign(Paint.Align.CENTER);
+        selectPaint=new Paint();
+        selectPaint.setColor(selectDayTestColor);
+        selectPaint.setTextAlign(Paint.Align.CENTER);
+        selectPaint.setTextSize(dayTextSize);
         this.setBackgroundResource(R.color.white);
 
         Calendar calendar=Calendar.getInstance();
@@ -140,6 +149,7 @@ public class CustomCalenderView extends SurfaceView {
 
         dayTextColor=typedArray.getColor(R.styleable.CustomCalenderView_ccv_dayTextSize,R.color.black);
         currentDayBgColor=typedArray.getColor(R.styleable.CustomCalenderView_ccv_currentDayBgColor,R.color.colorAccent);
+        selectDayTestColor=typedArray.getColor(R.styleable.CustomCalenderView_ccv_selectdayTextColor,R.color.white);
     }
 
 
@@ -189,23 +199,27 @@ public class CustomCalenderView extends SurfaceView {
                                 clickColumn = j;
                                 clickRow = i;
                             }
+                            canvas.drawText(currentDay+"",j * weekOneWidth + weekOneWidth / 2, (dayRowSize + dayTextSize) * (i + 1),currentDayPaint);
 
+                        }else {
+                            canvas.drawText(dayCount + "", j * weekOneWidth + weekOneWidth / 2, (dayRowSize + dayTextSize) * (i + 1), dayPaint);
                         }
-                        canvas.drawText(dayCount+"",j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1),dayPaint);
 
                         dayCount++;
                     }
                 }else{
                     if(selectYear==currentYear&&selectMonth==currentMonth&&currentDay==dayCount){
                         if(clickColumn==-1) {
-                            clickColumn = i;
-                            clickRow = j;
-                        }
+                            clickColumn = j;
+                            clickRow = i;
 
+                        }
+                        canvas.drawText(currentDay+"", j * weekOneWidth + weekOneWidth / 2, (dayRowSize + dayTextSize) * (i + 1), currentDayPaint);
                         //绘制今天日期的背景
                         //canvas.drawCircle(j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1)-dayTextSize/2,dayTextSize+20,currentDayPaint);
+                    }else {
+                        canvas.drawText(dayCount + "", j * weekOneWidth + weekOneWidth / 2, (dayRowSize + dayTextSize) * (i + 1), dayPaint);
                     }
-                    canvas.drawText(dayCount+"",j*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(i+1),dayPaint);
                     dayCount++;
                 }
                 if(dayCount>selectMonthDayCount){
@@ -217,9 +231,10 @@ public class CustomCalenderView extends SurfaceView {
                 break;
             }
         }
+
         if(clickColumn!=-1&&SaveDateInfoUtils.clickYear==selectYear&&SaveDateInfoUtils.clickMonth==selectMonth) {
             canvas.drawCircle(clickColumn * weekOneWidth + weekOneWidth / 2, (dayRowSize + dayTextSize) * (clickRow + 1) - dayTextSize / 2, cirRadius, currentDayPaint);
-            canvas.drawText(""+getDaty(clickRow,clickColumn),clickColumn*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(clickRow+1),dayPaint);
+            canvas.drawText(""+getDaty(clickRow,clickColumn),clickColumn*weekOneWidth+weekOneWidth/2,(dayRowSize+dayTextSize)*(clickRow+1),selectPaint);
 
         }
     }

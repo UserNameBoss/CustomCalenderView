@@ -17,6 +17,7 @@
         <attr name="ccv_dayTextColor" format="color"/>
         <attr name="ccv_dayTextSize" format="dimension"/>
         <attr name="ccv_currentDayBgColor" format="color"/>
+        <attr name="ccv_selectdayTextColor" format="color"/>
 
         //最大要显示多少个月份
         <attr name="ccv_maxMonthCount" format="integer"/>
